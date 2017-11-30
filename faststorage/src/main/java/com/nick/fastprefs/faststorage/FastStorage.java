@@ -2,6 +2,7 @@ package com.nick.fastprefs.faststorage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
@@ -13,27 +14,26 @@ import java.util.HashMap;
 
 public class FastStorage {
 
-    protected static final String NAME = "fast_prefs";
     private static final String APP_VERSION = "version";
 
-    protected static FastStorage instance;
-    protected static SharedPreferences preferences;
-    protected static Context context;
-    protected static HashMap<Class,Object> cache;
-    protected static HashMap<String,Object> keyCache;
+    protected  FastStorage instance;
+    protected  SharedPreferences preferences;
+    protected  Context context;
+    protected  HashMap<Class,Object> cache;
+    protected  HashMap<String,Object> keyCache;
 
-    private FastStorage(Context context) {
+    public FastStorage(Context context) {
         this.context = context;
     }
 
-    protected static HashMap<Class,Object> getCache() {
+    protected HashMap<Class,Object> getCache() {
         if (cache == null) {
             cache = new HashMap<>();
         }
         return cache;
     }
 
-    protected static HashMap<String,Object> getKeyCache() {
+    protected HashMap<String,Object> getKeyCache() {
         if (keyCache == null) {
             keyCache = new HashMap<>();
         }
@@ -41,12 +41,12 @@ public class FastStorage {
     }
 
     // returns true if version need to be updated
-    public static boolean init(Context context,String version) {
+    public boolean init(Context context,String version) {
         instance = new FastStorage(context);
         return checkVersion(version);
     }
 
-    public static boolean checkVersion(String newVersion) {
+    public boolean checkVersion(String newVersion) {
         String version = getInstance().getString(APP_VERSION,null);
         if (version == null) {
             getInstance().edit().putString(APP_VERSION, newVersion).apply();
@@ -55,16 +55,16 @@ public class FastStorage {
         return !version.equals(newVersion);
     }
 
-    public static SharedPreferences getInstance() {
+    public SharedPreferences getInstance() {
         if (preferences == null) {
-            preferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+            preferences = PreferenceManager.getDefaultSharedPreferences(context);
         }
         return preferences;
     }
 
     // objects with the same class will be overridden! use PreferenceCompatible or save(key,object)
     // if there are more than one usage of one class
-    public static void save(Object object) {
+    public void save(Object object) {
         String key;
         if (object instanceof PreferenceCompatible) {
             key = ((PreferenceCompatible) object).getPrefsKey();
@@ -75,12 +75,12 @@ public class FastStorage {
         getCache().put(object.getClass(),object);
     }
 
-    public static void save(String key, Object object) {
+    public void save(String key, Object object) {
         getInstance().edit().putString(key,new Gson().toJson(object,object.getClass())).apply();
         getKeyCache().put(key,object);
     }
 
-    public static <T> T get(Class<T> tClass) {
+    public <T> T get(Class<T> tClass) {
         T result = (T) getCache().get(tClass);
         if (result == null) {
             result = new Gson().fromJson(getInstance().getString(tClass.getName(), ""), tClass);
@@ -91,11 +91,11 @@ public class FastStorage {
         return result;
     }
 
-    public static String get(String key) {
+    public String get(String key) {
         return get(key,String.class);
     }
 
-    public static <T> T get(String key, Class<T> tClass) {
+    public <T> T get(String key, Class<T> tClass) {
         T result;
         Object obj = getKeyCache().get(key);
         if (obj == null) {
@@ -114,11 +114,11 @@ public class FastStorage {
         return result;
     }
 
-    public static <T> T getFromMemory(String key, Class<T> tClass) {
+    public <T> T getFromMemory(String key, Class<T> tClass) {
         return new Gson().fromJson(getInstance().getString(key, ""), tClass);
     }
 
-    public static <T> boolean update(Class<T> tClass, Function<T> function) {
+    public <T> boolean update(Class<T> tClass, Function<T> function) {
         Object objectToUpdate = get(tClass);
         if (objectToUpdate!=null) {
             function.response((T) objectToUpdate);
@@ -128,7 +128,7 @@ public class FastStorage {
         return false;
     }
 
-    public static <T> boolean update(String key, Class<T> tClass, Function<T> function) {
+    public <T> boolean update(String key, Class<T> tClass, Function<T> function) {
         Object objectToUpdate = get(key,tClass);
         if (objectToUpdate!=null && tClass.isInstance(objectToUpdate)) {
                 function.response((T) objectToUpdate);
