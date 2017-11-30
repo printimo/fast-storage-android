@@ -2,7 +2,7 @@
 
 code examples: 
 
- FastStorage fastStorage = new FastStorage(getApplicationContext());
+        FastStorage fastStorage = new FastStorage(getApplicationContext());
 
         //preferences initialization
 
