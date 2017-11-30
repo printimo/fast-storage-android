@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group 'com.github.fast-storage-android'
+group 'com.github.printimo'
 android {
     compileSdkVersion 26
 
