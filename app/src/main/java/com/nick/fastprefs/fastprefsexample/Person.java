@@ -1,7 +1,5 @@
 package com.nick.fastprefs.fastprefsexample;
 
-import com.nick.fastprefs.fastprefs.PreferenceCompatible;
-
 /**
  * Created by root on 30/11/17.
  */

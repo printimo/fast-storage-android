@@ -1,4 +1,4 @@
-package com.nick.fastprefs.fastprefs;
+package com.nick.fastprefs.faststorage;
 
 /**
  * Created by root on 30/11/17.

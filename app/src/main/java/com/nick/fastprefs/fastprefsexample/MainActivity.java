@@ -4,8 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.nick.fastprefs.fastprefs.FastStorage;
-import com.nick.fastprefs.fastprefs.Function;
+import com.nick.fastprefs.faststorage.FastStorage;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.nick.fastprefs.fastprefs;
+package com.nick.fastprefs.faststorage;
 
 import java.util.HashMap;
 

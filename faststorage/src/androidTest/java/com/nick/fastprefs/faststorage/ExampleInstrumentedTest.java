@@ -1,4 +1,4 @@
-package com.nick.fastprefs.fastprefs;
+package com.nick.fastprefs.faststorage;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
