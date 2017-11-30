@@ -5,6 +5,9 @@ code examples:
         FastStorage fastStorage = new FastStorage(getApplicationContext());
 
         //preferences initialization
+        
+        //Person is a class that contains id, name, surname, imageUrl and age
+        //PersonsResponse - array of persons 
 
         final Person person1 = new Person(1,"James", "Armstrong","https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_960_720.png", 40);
         final Person person2 = new Person(2, "Nick", "Sherbina","https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_960_720.png", 40);
