@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by root on 29/11/17.
@@ -21,6 +22,7 @@ public class FastStorage {
     protected  Context context;
     protected  HashMap<Class,Object> cache;
     protected  HashMap<String,Object> keyCache;
+    private List<Function> requestList;
 
     public FastStorage(Context context) {
         this.context = context;
@@ -62,16 +64,10 @@ public class FastStorage {
         return preferences;
     }
 
-    // objects with the same class will be overridden! use PreferenceCompatible or save(key,object)
+    // objects with the same class will be overridden! use save(key,object)
     // if there are more than one usage of one class
     public void save(Object object) {
-        String key;
-        if (object instanceof PreferenceCompatible) {
-            key = ((PreferenceCompatible) object).getPrefsKey();
-        } else {
-            key = object.getClass().getName();
-        }
-        getInstance().edit().putString(key, new Gson().toJson(object,object.getClass())).apply();
+        getInstance().edit().putString(object.getClass().getName(), new Gson().toJson(object,object.getClass())).apply();
         getCache().put(object.getClass(),object);
     }
 
@@ -83,7 +79,7 @@ public class FastStorage {
     public <T> T get(Class<T> tClass) {
         T result = (T) getCache().get(tClass);
         if (result == null) {
-            result = new Gson().fromJson(getInstance().getString(tClass.getName(), ""), tClass);
+            result = getFromMemory(tClass);
             if (result!=null) {
                 getCache().put(result.getClass(), result);
             }
@@ -116,6 +112,10 @@ public class FastStorage {
 
     public <T> T getFromMemory(String key, Class<T> tClass) {
         return new Gson().fromJson(getInstance().getString(key, ""), tClass);
+    }
+
+    public <T> T getFromMemory(Class<T> tClass) {
+        return getFromMemory(tClass.getName(),tClass);
     }
 
     public <T> boolean update(Class<T> tClass, Function<T> function) {
